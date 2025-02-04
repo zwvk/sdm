@@ -156,11 +156,11 @@ function makepartition() {
     [ $optimal_io_size -le 0 ] && optimal_io_size=1048576  #1024*1024
     physical_block_size=$(cat /sys/block/$pdevnm/queue/physical_block_size)
     alignment_offset=$(cat /sys/block/$pdevnm/alignment_offset)
+    align_to_sector=$(((optimal_io_size+alignment_offset)/physical_block_size))
     if [ "$align_to_sector" -lt 2048 ]
     then
         align_to_sector=2048
-    fi
-    align_to_sector=$(((optimal_io_size+alignment_offset)/physical_block_size))
+    fi 
     aligned_start_sector=$((((free_space_start/align_to_sector) + 1)*align_to_sector))
     aligned_end_sector=$(((free_space_start+((psize*1048576)/512))/align_to_sector*align_to_sector-1))
     partstart=$aligned_start_sector
